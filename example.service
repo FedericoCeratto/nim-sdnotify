@@ -1,0 +1,11 @@
+[Unit]
+Description=My service
+
+[Service]
+ExecStart=/tmp/myservice
+Restart=always
+Type=notify
+WatchdogSec=10s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,54 @@
+=== systemd service notification for Nim
+
+Client for the systemd "sd_notify" protocol. Sends message to systemd to notify service startup, ping the watchdog and other events.
+
+Installation:
+[source,bash]
+----
+nimble install sdnotify
+----
+
+Usage:
+[source,nim]
+----
+import sdnotify
+
+let sd = newSDNotify()
+
+# Notify the application is ready
+sd.notify_ready()
+
+# Set status
+sd.send_msg("STATUS=Running as expected")
+
+# Notify of an error
+sd.notify_errno(2)
+
+# Notify of a D-Bus error
+sd.notify_buserror("org.freedesktop.DBus.Error.TimedOut")
+
+# Set main process PID
+sd.notify_main_pid(1234)
+
+# Ping the watchdog
+sd.ping_watchdog()
+
+# Set the watchdog timer to 1s
+----
+
+Example systemd service file:
+[source,ini]
+----
+[Unit]
+Description=My service
+
+[Service]
+ExecStart=/tmp/myservice
+Restart=always
+Type=notify
+WatchdogSec=10s
+
+[Install]
+WantedBy=multi-user.target
+----
+
